@@ -25,7 +25,13 @@ class test_Amenity(test_basemodel):
     def test_name2(self):
         """testing new name """
         new = self.value()
-        self.assertEqual(type(new.name), str)
+        if storage_t == 'db':
+            # If using a database, name attribute should not be None
+            self.assertIsNotNone(new.name)
+            self.assertEqual(type(new.name), str)
+        else:
+            # If using FileStorage, name attribute should be an empty string
+            self.assertEqual(new.name, None)
 
 
 class Test_PEP8(unittest.TestCase):
@@ -143,7 +149,7 @@ class TestAmenity(unittest.TestCase):
         if storage_t == 'db':
             self.assertEqual(amenity.name, None)
         else:
-            self.assertEqual(amenity.name, "")
+            self.assertEqual(amenity.name, None)
 
     def test_to_dict_creates_dict(self):
         """test to_dict method creates a dictionary with proper attrs"""

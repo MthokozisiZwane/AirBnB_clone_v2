@@ -15,7 +15,12 @@ class City(BaseModel, Base):
         name: input name
     """
     __tablename__ = "cities"
-    name = Column(String(128), nullable=False)
-    state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
+    name = Column(String(128), nullable=False, default="")
+    state_id = Column(String(60),
+                      ForeignKey('states.id'), nullable=False, default="")
     places = relationship("Place", cascade='all, delete, delete-orphan',
                           backref="cities")
+
+    def __init__(self, *args, **kwargs):
+        """Constructor"""
+        super().__init__(*args, **kwargs)
