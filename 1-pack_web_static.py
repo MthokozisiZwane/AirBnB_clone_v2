@@ -1,21 +1,19 @@
 #!/usr/bin/python3
-from fabric.api import local
+from fabric.api import *
+import os
 from datetime import datetime
+
+env.hosts = ['localhost']
+
 
 def do_pack():
     try:
-        # Creating the versions folder if it does not exists
+        archive = "versions/web_static_" + datetime.now().\
+                   strftime("%Y%m%d%H%M%S") + ".tgz"
         local("mkdir -p versions")
-
-        # Generates archive name
-        time_format = "%Y%m%d%H%M%S"
-        archive_name = f"web_static_{datetime.utcnow().strftime(time_format)}.tgz"
-
-        # Creates the archive
-        local(f"tar -cvzf versions/{archive_name} web_static")
-
-        return f"versions/{archive_name}"
-
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
+        local("tar -zcvf versions/web_static_$(date +%Y%m%d%H%M%S).tgz\
+        web_static")
+        print("web_static packed: {} -> {}".
+              format(archive, os.path.getsize(archive)))
+    except:
+            return None
